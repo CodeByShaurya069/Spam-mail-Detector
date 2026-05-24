@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}
+Spam Mail Detector
+{% endblock %}
+
+{% block content %}
+
+<div class="bg-glow bg-glow-1"></div>
+<div class="bg-glow bg-glow-2"></div>
+
+<div class="container">
+
+    <!-- Hero Section -->
+    <div class="hero">
+        
+        <h1>📧 Spam Mail Detector</h1>
+
+        <p class="subtitle">
+            Paste an email message below and check
+            whether it is spam or not spam.
+        </p>
+
+        <div class="ai-badge">
+            AI Powered Text Classification
+        </div>
+
+    </div>
+
+    <!-- Main Card -->
+    <div class="card">
+
+        <form method="POST">
+
+            <label for="message">
+                Email Content
+            </label>
+
+            <textarea
+                id="message"
+                name="message"
+                placeholder="Paste your email here..."
+            >{{ message }}</textarea>
+
+            <div class="button-row">
+
+                <button type="submit"
+                        class="btn primary">
+                    Detect Email
+                </button>
+
+                <button type="button"
+                        class="btn secondary"
+                        onclick="spamSample()">
+                    Spam Sample
+                </button>
+
+                <button type="button"
+                        class="btn secondary"
+                        onclick="hamSample()">
+                    Normal Sample
+                </button>
+
+            </div>
+
+        </form>
+
+        <!-- Result -->
+        {% if result %}
+
+        <div class="result-box
+            {% if result == 'SPAM' %}
+                spam
+            {% elif result == 'NOT SPAM' %}
+                ham
+            {% else %}
+                info
+            {% endif %}
+        ">
+
+            <h2>
+
+                {% if result == 'SPAM' %}
+                    🚨 SPAM
+                {% elif result == 'NOT SPAM' %}
+                    ✅ NOT SPAM
+                {% else %}
+                    ℹ️ {{ result }}
+                {% endif %}
+
+            </h2>
+
+            {% if confidence %}
+            <p>
+                Confidence: {{ confidence }}%
+            </p>
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    <!-- Info Cards -->
+    <div class="info-grid">
+
+        <div class="mini-card">
+            <h3>How it works</h3>
+
+            <p>
+                TF-IDF converts words into numbers,
+                and Naive Bayes predicts whether
+                the email is spam.
+            </p>
+        </div>
+
+        <div class="mini-card">
+            <h3>Easy Demo</h3>
+
+            <p>
+                This project is simple, modern,
+                and perfect for school presentations.
+            </p>
+        </div>
+
+        <div class="mini-card">
+            <h3>Tip</h3>
+
+            <p>
+                Try messages like:
+                “Win free prize now”
+                or
+                “Please send homework notes”.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- Prediction History -->
+    {% if history %}
+
+    <div class="history-card">
+
+        <h3>Recent Predictions</h3>
+
+        {% for item in history %}
+
+        <div class="history-item">
+
+            <div>
+                <strong>{{ item.result }}</strong>
+                ({{ item.confidence }}%)
+            </div>
+
+            <div class="history-text">
+                {{ item.message[:80] }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="footer">
+        Made with Flask + Machine Learning
+    </footer>
+
+</div>
+
+<script>
+
+function spamSample() {
+
+    document.getElementById("message").value =
+    "Congratulations! You have won a free reward. Click this link now to claim your prize.";
+
+}
+
+function hamSample() {
+
+    document.getElementById("message").value =
+    "Please send me the assignment PDF tomorrow.";
+
+}
+
+</script>
+
+{% endblock %}
